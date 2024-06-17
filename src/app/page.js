@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main>
       <h1>Roast my code</h1>
-      <h2>get a free design audit powered by AI</h2>
+      <h2>get a free code audit powered by AI</h2>
       <textarea
         className="
             border rounded p-2 w-full
