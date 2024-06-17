@@ -1,0 +1,39 @@
+# Node.js
+node_modules/
+.env.local  # Environment variables (add other env files if needed)
+
+# Build output
+.next/
+out/  # Optional output directory for custom build processes
+
+# Testing frameworks
+jest/  # For Jest testing
+coverage/  # For code coverage reports
+
+# Caching directories
+.yarn/cache  # For Yarn package cache (adjust if using npm)
+
+# Temporary files
+.cache/  # For general caching
+tmp/  # For temporary files
+
+# Editor configuration
+# Adjust based on your editor (VS Code, WebStorm, etc.)
+.vscode/  # Common VS Code files
+.idea/  # Common WebStorm files
+
+# Logs
+*.log
+
+# IDE specific files
+# Adjust based on your IDE (if applicable)
+
+# Static type checker
+# Adjust based on your choice (TypeScript, Flow)
+# If not using a static type checker, remove these lines
+tsconfig.json
+flow-typed/
+
+# Dependency lock files
+package-lock.json  # For npm
+yarn.lock  # For Yarn
