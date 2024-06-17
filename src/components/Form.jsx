@@ -23,7 +23,7 @@ const Form = () => {
   }
 
   function showValue() {
-    alert(editorRef.current.getValue());
+       alert("WORK IN PROGRESS COME BACK SOON");
   }
 
   const handleEditorBeforeMount = (monaco) => {
