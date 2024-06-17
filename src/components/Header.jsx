@@ -7,7 +7,7 @@ const Header = () => {
         CODE <span className="text-white">ROAST</span>
       </h1>
       <p className="text-gray-400 mb-12 md:text-2xl text-md mt-1 text-center">
-        get a free design audit powered by AI
+        get a free code review powered by AI
       </p>
     </>
   );
