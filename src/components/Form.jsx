@@ -10,7 +10,8 @@ const Form = () => {
   const [emailVal, setEmail] = useState("");
   const editorRef = useRef(null);
 
-  const handleQuery = async () => {
+  const handleQuery = async (e) => {
+    e.preventDefault();
     const prompt = showValue();
     if (prompt) {
       setLoading(true);
@@ -34,7 +35,7 @@ const Form = () => {
   }
 
   function showValue() {
-    // alert("WORK IN PROGRESS COME BACK SOON");
+    alert("WORK IN PROGRESS COME BACK SOON");
     return editorRef.current.getValue();
   }
 
@@ -68,9 +69,9 @@ const Form = () => {
       </button>
 
       {response && (
-        <div className="w-full max-w-[500px] bg-gray-100 p-4 rounded-md mt-4">
-          <h3 className="text-lg font-bold">AI Response:</h3>
-          <p>{response}</p>
+        <div className="w-full max-w-[500px] p-4 rounded-md mt-4">
+          <h3 className="text-xl mb-2">AI Response:</h3>
+          <p className="mt-4 text-white">{response}</p>
         </div>
       )}
     </form>
