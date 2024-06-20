@@ -1,6 +1,5 @@
 import { Editor } from "@monaco-editor/react";
 import React, { useRef, useState } from "react";
-import { oneDarkPro } from "@/utils/darktheme";
 import { queryGemini } from "@/utils/gemini";
 
 const Form = () => {
@@ -39,16 +38,6 @@ const Form = () => {
     return editorRef.current.getValue();
   }
 
-  const handleEditorBeforeMount = (monaco) => {
-    monaco.editor.defineTheme("OneDarkPro", {
-      base: "vs-dark",
-      inherit: true,
-      ...oneDarkPro, // https://pheralb.dev/post/monaco-custom-theme  Todo : change it
-    });
-  };
-
-  console.log(response, "this is hte response");
-
   return (
     <form className="flex flex-col items-center w-full max-w-screen-md">
       <div className="mb-8">
@@ -58,7 +47,6 @@ const Form = () => {
           defaultLanguage="javascript"
           defaultValue="// some comment"
           onMount={handleEditorDidMount}
-          beforeMount={handleEditorBeforeMount}
         />
       </div>
 
