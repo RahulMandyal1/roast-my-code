@@ -1,28 +1,47 @@
 import { Editor } from "@monaco-editor/react";
 import React, { useRef, useState } from "react";
 import { queryGemini } from "@/utils/gemini";
+import { useAppContext } from "@/context/AppContext";
+import axios from "axios";
 
 const Form = () => {
-  const [prompt, setPrompt] = useState("");
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const [emailVal, setEmail] = useState("");
   const editorRef = useRef(null);
+  const { setResponse, loading, setLoading, emailVal, setEmail } =
+    useAppContext();
 
-  const handleQuery = async (e) => {
+  const submitDisabled = loading || !emailVal;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const prompt = showValue();
-    if (prompt) {
-      setLoading(true);
-      try {
-        const response = await queryGemini(prompt);
-        setResponse(response);
-      } catch (error) {
-        console.error("Error querying Gemini:", error);
-      } finally {
-        setLoading(false);
+
+    setLoading(true);
+
+    try {
+      // First, save the user's email
+      const emailResponse = await axios.post("/api/saveEmail", {
+        email: emailVal,
+      });
+
+      if (emailResponse.data.success) {
+        const prompt = showValue();
+        if (prompt) {
+          try {
+            const response = await queryGemini(prompt);
+            setResponse(response);
+          } catch (error) {
+            console.error("Error querying Gemini:", error);
+            setResponse(
+              "An error occurred while processing your request with Gemini."
+            );
+          }
+        } else {
+          setResponse("Please enter some code before submitting.");
+        }
       }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,18 +81,14 @@ const Form = () => {
       </div>
 
       <button
-        className="w-full py-3 rounded-full mb-12 max-w-[500px] bg-red-400"
-        onClick={handleQuery}
+        className={`w-full py-3 rounded-full mb-12 max-w-[500px] ${
+          submitDisabled ? "bg-red-400" : "bg-red-500"
+        }`}
+        onClick={handleSubmit}
+        disabled={submitDisabled}
       >
         {loading ? "Loading..." : "Roast it!"}
       </button>
-
-      {response && (
-        <div className="w-full max-w-[500px] p-4 rounded-md mt-4">
-          <h3 className="text-xl mb-2">AI Response:</h3>
-          <p className="mt-4 text-white">{response}</p>
-        </div>
-      )}
     </form>
   );
 };
