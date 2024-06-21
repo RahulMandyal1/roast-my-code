@@ -4,7 +4,6 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: [true, "Email is required."],
-    unique: true,
     trim: true,
     lowercase: true,
     match: [/^[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}$/i, "Invalid email address"],
