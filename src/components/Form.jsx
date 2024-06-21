@@ -1,28 +1,64 @@
 import { Editor } from "@monaco-editor/react";
 import React, { useRef, useState } from "react";
 import { queryGemini } from "@/utils/gemini";
+import { useAppContext } from "@/context/AppContext";
+import axios from "axios";
 
 const Form = () => {
-  const [prompt, setPrompt] = useState("");
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const [emailVal, setEmail] = useState("");
   const editorRef = useRef(null);
+  const { response, setResponse, loading, setLoading, emailVal, setEmail } =
+    useAppContext();
 
   const handleQuery = async (e) => {
     e.preventDefault();
-    const prompt = showValue();
-    if (prompt) {
-      setLoading(true);
-      try {
-        const response = await queryGemini(prompt);
-        setResponse(response);
-      } catch (error) {
-        console.error("Error querying Gemini:", error);
-      } finally {
-        setLoading(false);
+
+    if (!emailVal) {
+      setResponse("Please enter your email before submitting.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // First, save the user's email
+      const emailResponse = await axios.post("/api/saveEmail", {
+        email: emailVal,
+      });
+
+      if (emailResponse.data.success) {
+        const prompt = showValue();
+        if (prompt) {
+          try {
+            const response = await queryGemini(prompt);
+            setResponse(response);
+          } catch (error) {
+            console.error("Error querying Gemini:", error);
+            setResponse(
+              "An error occurred while processing your request with Gemini."
+            );
+          }
+        } else {
+          setResponse("Please enter some code before submitting.");
+        }
+      } else {
+        setResponse(
+          emailResponse.data.msg.join(", ") || "Failed to save email."
+        );
       }
+    } catch (error) {
+      console.error("Error:", error);
+      if (error.response) {
+        setResponse(
+          error.response.data.msg.join(", ") ||
+            "An error occurred while saving your email."
+        );
+      } else if (error.request) {
+        setResponse("No response received from the server. Please try again.");
+      } else {
+        setResponse("An error occurred while processing your request.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,13 +103,6 @@ const Form = () => {
       >
         {loading ? "Loading..." : "Roast it!"}
       </button>
-
-      {response && (
-        <div className="w-full max-w-[500px] p-4 rounded-md mt-4">
-          <h3 className="text-xl mb-2">AI Response:</h3>
-          <p className="mt-4 text-white">{response}</p>
-        </div>
-      )}
     </form>
   );
 };
