@@ -6,16 +6,13 @@ import axios from "axios";
 
 const Form = () => {
   const editorRef = useRef(null);
-  const { response, setResponse, loading, setLoading, emailVal, setEmail } =
+  const { setResponse, loading, setLoading, emailVal, setEmail } =
     useAppContext();
 
-  const handleQuery = async (e) => {
-    e.preventDefault();
+  const submitDisabled = loading || !emailVal;
 
-    if (!emailVal) {
-      setResponse("Please enter your email before submitting.");
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     setLoading(true);
 
@@ -40,23 +37,9 @@ const Form = () => {
         } else {
           setResponse("Please enter some code before submitting.");
         }
-      } else {
-        setResponse(
-          emailResponse.data.msg.join(", ") || "Failed to save email."
-        );
       }
     } catch (error) {
       console.error("Error:", error);
-      if (error.response) {
-        setResponse(
-          error.response.data.msg.join(", ") ||
-            "An error occurred while saving your email."
-        );
-      } else if (error.request) {
-        setResponse("No response received from the server. Please try again.");
-      } else {
-        setResponse("An error occurred while processing your request.");
-      }
     } finally {
       setLoading(false);
     }
@@ -98,8 +81,11 @@ const Form = () => {
       </div>
 
       <button
-        className="w-full py-3 rounded-full mb-12 max-w-[500px] bg-red-400"
-        onClick={handleQuery}
+        className={`w-full py-3 rounded-full mb-12 max-w-[500px] ${
+          submitDisabled ? "bg-red-400" : "bg-red-500"
+        }`}
+        onClick={handleSubmit}
+        disabled={submitDisabled}
       >
         {loading ? "Loading..." : "Roast it!"}
       </button>

@@ -8,6 +8,16 @@ export async function POST(req) {
 
   try {
     await connectDB();
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return NextResponse.json({
+        msg: ["Email already exists"],
+        success: true,
+      });
+    }
+
     await User.create({ email });
 
     return NextResponse.json({
