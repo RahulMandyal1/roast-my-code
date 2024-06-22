@@ -7,17 +7,17 @@ import axios from "axios";
 const Form = () => {
   const editorRef = useRef(null);
   const {
-    setResponse,
-    loading,
+    setGeminiResponse,
+    isLoading,
     setLoading,
     emailVal,
     setEmail,
     setEditorValue,
-    editorValueRef,
-    initialEditorValue,
+    editorContentRef,
+    initialEditorContent,
   } = useAppContext();
 
-  const submitDisabled = loading || !emailVal;
+  const submitDisabled = isLoading || !emailVal;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,20 +25,20 @@ const Form = () => {
     setLoading(true);
 
     try {
-      const prompt = editorValueRef.current;
+      const prompt = editorContentRef.current;
 
       if (prompt) {
         try {
           const response = await queryGemini(prompt);
-          setResponse(response);
+          setGeminiResponse(response);
         } catch (error) {
           console.error("Error querying Gemini:", error);
-          setResponse(
+          setGeminiResponse(
             "An error occurred while processing your request with Gemini."
           );
         }
       } else {
-        setResponse("Please enter some code before submitting.");
+        setGeminiResponse("Please enter some code before submitting.");
       }
 
       // First, save the user's email
@@ -77,14 +77,8 @@ const Form = () => {
     editorRef.current = editor;
   }
 
-  function showValue() {
-    alert("WORK IN PROGRESS COME BACK SOON");
-    return editorRef.current.getValue();
-  }
-
   function handleEditorChange(value, event) {
     setEditorValue(value);
-    console.log("here is the current model value:", value);
   }
 
   return (
@@ -94,7 +88,7 @@ const Form = () => {
           width={536}
           height={301}
           defaultLanguage="javascript"
-          defaultValue={initialEditorValue}
+          defaultValue={initialEditorContent}
           onMount={handleEditorDidMount}
           onChange={handleEditorChange}
         />
@@ -117,7 +111,7 @@ const Form = () => {
         onClick={handleSubmit}
         disabled={submitDisabled}
       >
-        {loading ? "Loading..." : "Roast it!"}
+        {isLoading ? "Loading..." : "Roast it!"}
       </button>
     </form>
   );

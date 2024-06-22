@@ -11,14 +11,16 @@ Grudgingly, here are some tips:
 `;
 
 const ResponseRenderer = () => {
-  const { response, loading, editorValueRef, initialEditorValue } =
+  const { isLoading, editorContentRef, initialEditorContent, geminiResponse } =
     useAppContext();
   const displayResponse =
-    editorValueRef.current === initialEditorValue ? EXAMPLE_RESPONSE : response;
+    editorContentRef.current === initialEditorContent
+      ? EXAMPLE_RESPONSE
+      : geminiResponse;
 
   return (
     <div className="w-1/3 p-4 min-h-screen h-full bg-[#1D232A] ">
-      {loading ? (
+      {isLoading ? (
         <ResponseSkeleton />
       ) : (
         <div className="w-full max-w-[500px] p-4 rounded-md mt-4 text-white">
