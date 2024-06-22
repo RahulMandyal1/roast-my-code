@@ -8,16 +8,16 @@ import React, {
 } from "react";
 
 const AppContext = createContext();
-const initialEditorValue = `function greet(name) {
+const initialEditorContent = `function greet(name) {
   console.log("Hello, " + name + "!");
 }`;
 
 export function AppProvider({ children }) {
   const [prompt, setPrompt] = useState("");
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [geminiResponse, setGeminiResponse] = useState("");
+  const [isLoading, setLoading] = useState(false);
   const [emailVal, setEmailVal] = useState("");
-  const editorValueRef = useRef(initialEditorValue);
+  const editorContentRef = useRef(initialEditorContent);
 
   // Load email from localStorage on component mount
   useEffect(() => {
@@ -33,7 +33,7 @@ export function AppProvider({ children }) {
   };
 
   const setEditorValue = (value) => {
-    editorValueRef.current = value;
+    editorContentRef.current = value;
   };
 
   return (
@@ -41,15 +41,15 @@ export function AppProvider({ children }) {
       value={{
         prompt,
         setPrompt,
-        response,
-        setResponse,
-        loading,
+        geminiResponse,
+        setGeminiResponse,
+        isLoading,
         setLoading,
         emailVal,
         setEmail,
         setEditorValue,
-        editorValueRef,
-        initialEditorValue,
+        editorContentRef,
+        initialEditorContent,
       }}
     >
       {children}
